@@ -462,12 +462,11 @@ class _showBottomSheetWidgetState extends State<showBottomSheetWidget> {
                             child_count = child_count;
                             adult_count=adult_count;
                           });
-                          Navigator.push(
+                          Navigator.pop(
                               context,
                               MaterialPageRoute(
 
-                                  builder: (context) => HomeScreenView(room_count:room_count, child_count: child_count,
-                                    adult_count: adult_count,)));
+                                  builder: (context) => HomeScreenView()));
                         },
                         child: Text(
                           AppString.apply_btn,

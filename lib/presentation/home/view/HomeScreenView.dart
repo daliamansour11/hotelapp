@@ -4,31 +4,26 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:hotels/core/colors_manger.dart';
 import 'package:hotels/core/strings_manger.dart';
 import 'package:hotels/core/values_manger.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/assets_manger.dart';
 import '../../../main.dart';
 import 'home_widget/HomeWidget.dart';
 import 'home_widget/ShowBottomSheet.dart';
 class HomeScreenView extends StatefulWidget {
- final int room_count;
- final  int adult_count;
- final int child_count;
-  const HomeScreenView({required this.room_count,required this.child_count,required this.adult_count});
-
   @override
   State<HomeScreenView> createState() => _HomeScreenViewState();
 }
-
 List<String> Booking_deatils = [
-
 ];
 var valueItem;
-
+DateTimeRange? dateRange;
 var status = false;
 var SelectedCountry ;
 
 TextEditingController cityController = TextEditingController();
 TextEditingController dateRanageController = TextEditingController();
+
 
 class _HomeScreenViewState extends State<HomeScreenView> {
   @override
@@ -48,14 +43,17 @@ class _HomeScreenViewState extends State<HomeScreenView> {
               topRight: const Radius.circular(18.0),
             ),
           ),
-          child:
-              showBottomSheetWidget(),
-        ))).whenComplete(() {
+          child:showBottomSheetWidget(),
+        ))).then((value) {
+
+          setState(() {
+            valueItem = value;
+
+          });
+        print("valuevalue$valueItem");
 
       });
 }
-
-
     mq = MediaQuery.of(context).size;
     return Scaffold(
         body: Container(
@@ -97,7 +95,6 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                   SizedBox(
                     height: 10,
                   ),
-
                   Stack(
                     children: [
                       Padding(
@@ -237,59 +234,156 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.all(AppPadding.p8),
-                                        child: TextFormField(
-                                          controller: cityController,
-                                          obscureText: false,
-                                          style: TextStyle(color: ColorsManger.blue),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              value = cityController.text;
-                                            });
-                                          },
-                                          keyboardType: TextInputType.text,
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: ColorsManger.blue,
-                                                width: 1,
+                                        child: Row(
+                                          children: [
+                                            TextFormField(
+                                              style: TextStyle(color: ColorsManger.blue),
+                                              controller: dateRanageController,
+                                              decoration: const InputDecoration(
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.all(Radius.circular(20))),
+                                                enabledBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Colors.grey,
+                                                    width: 1,
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.all(Radius.circular(20)),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Colors.blue,
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.all(Radius.circular(20)),
+                                                ),
+                                                hintStyle: TextStyle(color: Colors.black45),
+                                                errorStyle: TextStyle(color: Colors.redAccent),
+                                                suffixIcon: Icon(Icons.event_note),
+                                                labelText: 'Select Date',
                                               ),
-                                              borderRadius:
-                                              BorderRadius.all(Radius.circular(18)),
+                                              onTap: () async {
+                                                final DateTimeRange? result = await showDateRangePicker(
+                                                  context: context,
+                                                  firstDate: DateTime(2022, 1, 1),
+                                                  lastDate: DateTime(2030, 12, 31),
+                                                  currentDate: DateTime.now(),
+                                                  saveText: 'Done',
+                                                );
+                                                if ( result!= null) {
+
+                                                  dateRange = result;
+
+                                                  dateRanageController
+                                                    ..text = DateFormat("yyyy-MM-dd")
+                                                        .format(dateRange!.start)
+                                                    ..selection = TextSelection.fromPosition(
+                                                        TextPosition(
+                                                            offset:dateRanageController .text.length,
+                                                            affinity: TextAffinity.upstream));
+                                                  print(
+                                                      "daaaaaaaaaaaaaaaaa${dateRanageController.text.runtimeType}");
+                                                }
+
+                                                if (result != null) {
+                                                  // Rebuild the UI
+                                                  print(result.start.toString());
+                                                  setState(() {
+                                                    dateRange = result;
+                                                  });
+                                                };
+
+                                              },
+
+                                              validator: (value) {
+                                                if (value!.isEmpty || value == null) {
+                                                  return "please enter  your startDate";
+
+                                                  // else if(!value .contains("@") ||!value .contains(".") ){
+                                                  //   return " please enter valide starttime ";
+                                                }
+                                                return null;
+                                              },
                                             ),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: ColorsManger.blue,
-                                                // width: 1,
+                                            TextFormField(
+                                              style: TextStyle(color: ColorsManger.blue),
+                                              controller: dateRanageController,
+                                              decoration: const InputDecoration(
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                    BorderRadius.all(Radius.circular(20))),
+                                                enabledBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Colors.grey,
+                                                    width: 1,
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.all(Radius.circular(20)),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Colors.blue,
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.all(Radius.circular(20)),
+                                                ),
+                                                hintStyle: TextStyle(color: Colors.black45),
+                                                errorStyle: TextStyle(color: Colors.redAccent),
+                                                suffixIcon: Icon(Icons.clear),
+                                                labelText: 'Select Date',
                                               ),
-                                              borderRadius:
-                                              BorderRadius.all(Radius.circular(18)),
+                                              onTap: () async {
+                                                final DateTimeRange? result = await showDateRangePicker(
+                                                  context: context,
+                                                  firstDate: DateTime(2022, 1, 1),
+                                                  lastDate: DateTime(2030, 12, 31),
+                                                  currentDate: DateTime.now(),
+                                                  saveText: 'Done',
+                                                );
+                                                if ( result!= null) {
+
+                                                  dateRange = result;
+
+                                                  dateRanageController
+                                                    ..text = DateFormat("yyyy-MM-dd")
+                                                        .format(dateRange!.start)
+                                                    ..selection = TextSelection.fromPosition(
+                                                        TextPosition(
+                                                            offset:dateRanageController .text.length,
+                                                            affinity: TextAffinity.upstream));
+                                                  print(
+                                                      "daaaaaaaaaaaaaaaaa${dateRanageController.text.runtimeType}");
+                                                }
+
+                                                if (result != null) {
+                                                  // Rebuild the UI
+                                                  print(result.start.toString());
+                                                  setState(() {
+                                                    dateRange = result;
+                                                  });
+                                                };
+
+                                              },
+
+                                              validator: (value) {
+                                                if (value!.isEmpty || value == null) {
+                                                  return "please enter  your startDate";
+
+                                                  // else if(!value .contains("@") ||!value .contains(".") ){
+                                                  //   return " please enter valide starttime ";
+                                                }
+                                                return null;
+                                              },
                                             ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: ColorsManger.lightblue,
-                                                  width: 2),
-                                              borderRadius:
-                                              BorderRadius.all(Radius.circular(18)),
-                                            ),
-                                            // labelText: "UserEmail", //babel text
-                                            hintText: "Select Date...",
-                                            contentPadding: EdgeInsets.symmetric(
-                                                vertical: 1, horizontal: 8),
-                                            //hint text
-                                            //prefix iocn
-                                            hintStyle: TextStyle(
-                                                color: ColorsManger.lightGrey),
-                                            //hint text style
-                                            labelStyle: TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.redAccent), //label style
-                                          ),
-                                        ),
+                                          ],
+                                        )
                                       ),
                                     ),
                                   ),
                                   Padding(
-
                                     padding: const EdgeInsets.only(
                                         top: AppPadding.p13 ,left:AppPadding.p8 , right: AppPadding.p8),
                                     child: Container(
@@ -305,13 +399,16 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                                         itemHeight: mq.height*0.081,
                                         hint: Padding(
                                           padding: const EdgeInsets.only(left: AppPadding.p38),
-                                          child: Center(child: Text(AppString.select_Nationality,
-                                            textAlign: TextAlign.center,style:Theme.of(context).textTheme.labelMedium,)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 12.0),
+                                            child: Center(child: Text(AppString.select_Nationality,
+                                              textAlign: TextAlign.center,style:Theme.of(context).textTheme.displayLarge,)),
+                                          ),
                                         ),
                                         dropdownColor: Colors.white,
 
                                         value: SelectedCountry,
-                                        items:["Egypt","Libya""Kuwait","Iraq","Germany",'Italy']
+                                        items:["Egypt","Libya","Kuwait","Iraq","Germany",'Italy']
                                             .map((e) =>
                                             DropdownMenuItem(
                                               child: Text(" $e",style: Theme.of(context).textTheme.labelMedium,),
@@ -320,66 +417,137 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                                         onChanged: (value) {
                                           setState
                                             ((){
-                                            SelectedCountry= value!;
-
+                                             SelectedCountry= value!;
                                           });
                                         },
+
                                       ),
                                     ),
                                   ),
                                   Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: AppPadding.p13 ,left:AppPadding.p8 , right: AppPadding.p8),
+                                    child: Container(
+                                      height: mq.height*0.08,
+                                      width: mq.width * 0.93,
+                                      decoration: BoxDecoration(
+                                          color: ColorsManger.white,
+                                          borderRadius: BorderRadius.circular(15)
 
-                                      padding: const EdgeInsets.only(
-                                          top: AppPadding.p13 ,left:AppPadding.p8 , right: AppPadding.p8),
-                                      child: Container(
-                                        height: mq.height*0.08,
-                                        width: mq.width * 0.93,
-                                        decoration: BoxDecoration(
-                                            color: ColorsManger.white,
-                                            borderRadius: BorderRadius.circular(15)
-
-                                        ),
-                                        child: Container(
-                                          child: DropdownButtonFormField(
-
-                                            decoration: InputDecoration(
-                                              labelText: 'BookingDetails',
-                                              labelStyle: const TextStyle(),
-                                              border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(5.0)),
-                                              contentPadding: const EdgeInsets.only(left: 5.0),),
-                                            value: SelectedCountry,
-                                            isExpanded: true,
-                                            items:
-                                            Booking_deatils.map((String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(" $value",style: Theme.of(context).textTheme.labelMedium,),);
-                                            }).toSet().toList(),
-                                            onChanged: (value) {_show(context);
-                                              _show(context);
-                                            },
-                                            onTap: (){
-                                              _show(context);
-                                            },
+                                      ),
+                                      child: InkWell(
+                                        onTap: (){
+                                          _show(context);
+                                        },
+                                        child: DropdownButtonFormField(
+                                          isDense: false,
+                                          itemHeight: mq.height*0.081,
+                                          hint: Padding(
+                                            padding: const EdgeInsets.only(left: AppPadding.p38),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 12.0),
+                                              child: Center(child: Text(AppString.booking_details,
+                                                textAlign: TextAlign.center,style:Theme.of(context).textTheme.displayLarge,)),
+                                            ),
                                           ),
-                                        ),
+                                          dropdownColor: Colors.white,
 
-                                      ))],
+                                          value: valueItem,
+                                          items:Booking_deatils
+                                              .map((e) =>
+                                              DropdownMenuItem(
+                                                child: Text(" $e",style: Theme.of(context).textTheme.labelMedium,),
+                                                value: e,
+                                              )).toList(),
+                                          onChanged: (value) {
+                                            // _show(context);
+                                            setState
+                                              ((){
+                                              valueItem= value!;
+                                            });
+                                          },
+                                          onTap: (){
+                                            _show(context);
+                                          },
+
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                               ],
                               ),
                             )),
                       ),
                     ],
                   )
-
-
-
-
                 ])
 
 
-                )
-            ));
+            )
+        ));
+  }
+
+  // Data Range Picker
+  // Future pickDateRange(BuildContext context) async {
+  //   final initialDateRange = DateTimeRange(
+  //     start: DateTime.now(),
+  //
+  //     end: DateTime.now().add(Duration(hours: 24 * 3)),
+  //   );
+  //   final newDateRange = await showDateRangePicker(
+  //     context: context,
+  //     firstDate: DateTime(DateTime.now().year - 5),
+  //     lastDate: DateTime(DateTime.now().year + 5),
+  //     initialDateRange: dateRange ?? initialDateRange,
+  //     builder: (BuildContext context, Widget? child) {
+  //       return Theme(
+  //         data: ThemeData.light().copyWith(
+  //           primaryColor: Colors.teal,
+  //           accentColor: Colors.teal,
+  //           colorScheme: ColorScheme.light(primary: Colors.teal),
+  //           buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+  //         ),
+  //         child: child!,
+  //       );
+  //     },
+  //   );
+  //   if (newDateRange != null) {
+  //     dateRange = newDateRange ;
+  //     dateRanageController
+  //       ..text = DateFormat("yyyy-MM-dd")
+  //           .format(newDateRange)
+  //       ..selection = TextSelection.fromPosition(
+  //           TextPosition(
+  //               offset:
+  //               dateRanageController.text.length,
+  //               affinity: TextAffinity.upstream));
+  //   }
+  //   if (newDateRange == null) return;
+  //   setState(() => dateRange = newDateRange);
+  // }
+
+  void _show() async {
+    final DateTimeRange? result = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2022, 1, 1),
+      lastDate: DateTime(2030, 12, 31),
+      currentDate: DateTime.now(),
+      saveText: 'Done',
+    );
+
+    if (result != null) {
+      // Rebuild the UI
+      print(result.start.toString());
+      setState(() {
+        dateRange = result;
+      });
+    }
   }
 }
+
+
+
+
+
+
 

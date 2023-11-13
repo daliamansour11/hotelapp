@@ -82,7 +82,7 @@ ThemeData getAppTheme() {
               fontSize: FontSize.s14,
               decoration: TextDecoration.underline),
           displayLarge: getSemiBoldStyle(
-              color: ColorsManger.darkGrey, fontSize: FontSize.s22)),
+              color: ColorsManger.blue, fontSize: FontSize.s20)),
 
       ///input docorection theme
       inputDecorationTheme: InputDecorationTheme(

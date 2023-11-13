@@ -31,7 +31,7 @@ class RoutesGenerator{
 
 
       case Routes.homeRoute:
-        return MaterialPageRoute(builder: (_)=>HomeScreenView(room_count: 0, child_count: 0, adult_count: 0,));
+        return MaterialPageRoute(builder: (_)=>HomeScreenView());
       case Routes.categoryRoute:
       default:
         return unDefinedRoute();

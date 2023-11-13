@@ -6,6 +6,7 @@ class AppString{
   static const select_city= "Select City";
   static const select_Nationality= "Select Nationality";
   static const find_hotel= "Find Hotel ";
+  static const booking_details= "Find Hotel ";
   static const rooms_Guests= "Rooms and Guests ";
   static const room= "Rooms ";
   static const adult= "Adult ";
